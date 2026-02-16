@@ -1,66 +1,168 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" data-theme="dark">
 <head>
-    <title>Will You Be My Valentine?</title>
-    <style>
-        body {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            background-color: pink;
-            overflow: hidden;
-        }
-
-        h1 {
-            margin-top: 100px;
-            font-size: 40px;
-        }
-
-        .btn {
-            padding: 15px 30px;
-            font-size: 18px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            position: absolute;
-        }
-
-        #yes {
-            background-color: red;
-            color: white;
-            left: 45%;
-            top: 50%;
-        }
-
-        #no {
-            background-color: gray;
-            color: white;
-            left: 55%;
-            top: 50%;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Binaya | Portfolio</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="home_pages_style.css"/>
 </head>
 <body>
 
-    <h1>Will You Be My Valentine? </h1>
+  <!-- Navigation -->
+  <nav id="navbar">
+    <div class="nav-container">
+      <div class="logo">Parivesh Adhikari</div>
 
-    <button id="yes" class="btn" onclick="yesClicked()">Yes </button>
-    <button id="no" class="btn" onmouseover="moveButton()">No😜😜😜😜</button>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
 
-    <script>
-        function yesClicked() {
-            document.body.innerHTML = "<h1>Yayyy!!!  You made my day!</h1>";
-        }
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home" class="active">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#Notes">Notes</a></li>
+        <li><a href="#contact">Contact</a></li>
+        
+      </ul>
 
-        function moveButton() {
-            var button = document.getElementById("no");
-            var x = Math.random() * (window.innerWidth - 100);
-            var y = Math.random() * (window.innerHeight - 50);
+      <div class="theme-toggle-desktop">
+        <button id="themeBtn-desktop" aria-label="Toggle theme">
+          <i class="fas fa-moon"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
 
-            button.style.left = x + "px";
-            button.style.top = y + "px";
-        }
-    </script>
+  <!-- Hero -->
+  <section id="home">
+    <video class="hero-video" autoplay muted loop playsinline>
+      <source src="video/bg.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <h1>Hi There, I'm Binaya</h1>
+      <h2>And I <span class="typing">build things</span><span class="cursor">|</span></h2>
+      <div class="socials">
+        <a href="https://github.com/" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="www.linkedin.com/in/parivesh-adhikari-425a832b2" target="_blank"><i class="fab fa-linkedin"></i></a>
+      </div>
+      <div>
+        <a href="#Notes" class="btn">See My Work</a>
+        <a href="#contact" class="btn">Let's Talk</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about">
+    <h2 class="section-title">About Me</h2>
+    <div class="about-grid">
+      <div class="about-img">
+        <img src="" alt="Parivesh Adhikari">
+      </div>
+      <div>
+        <p style="font-size:1.25rem; margin-bottom:1.8rem;">
+          I'm a passionate <strong>web developer</strong> based in Kathmandu, Nepal, focused on building clean, modern and user-centered digital experiences. 🇳🇵
+        </p>
+        <p style="margin-bottom:1.8rem;">
+          I enjoy solving real problems with code — whether it's a fast frontend with animations.
+        </p>
+        <p>Currently mastering React, Next.js, Node.js, Tailwind.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Notes -->
+  <section id="Notes">
+    <h2 class="section-title">My Study Notes</h2>
+    <p style="text-align:center; max-width:700px; margin:0 auto 4rem; color:var(--text-muted); font-size:1.15rem;">
+      Explore my digital notes on core CS subjects.
+    </p>
+
+    <div class="notes-grid">
+      <a href="discrete_structure.html" class="project-card" target="_blank">
+        <div class="project-img" style="background-image:url('image/disc.png');"></div>
+        <div class="project-info">
+          <h3>Discrete Structures</h3>
+          <p class="discrete">Sets, Relations, Graphs, Logic, Proofs, Combinatorics & more.</p>
+          <div style="margin-top:1.5rem; text-align:center;">
+            <span class="btn" style="padding:0.9rem 2rem; font-size:1rem;">View Notes →</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="dsa_page.html" class="project-card" target="_blank">
+        <div class="project-img" style="background-image:url('image/dsa.png');"></div>
+        <div class="project-info">
+          <h3>Data Structures & Algorithms</h3>
+          <p class="discrete">Arrays, Linked Lists, Trees, Graphs, Sorting, DP...</p>
+          <div style="margin-top:1.5rem; text-align:center;">
+            <span class="btn" style="padding:0.9rem 2rem; font-size:1rem;">View Notes →</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="os_page.html" class="project-card" target="_blank">
+        <div class="project-img" style="background-image:url('image/os.png');"></div>
+        <div class="project-info">
+          <h3>Operating Systems</h3>
+          <p class="discrete">Processes, Threads, Scheduling, Memory, Deadlocks...</p>
+          <div style="margin-top:1.5rem; text-align:center;">
+            <span class="btn" style="padding:0.9rem 2rem; font-size:1rem;">View Notes →</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="datamining_page.html" class="project-card" target="_blank">
+        <div class="project-img" style="background-image:url('image/datamin.png');"></div>
+        <div class="project-info">
+          <h3>Data Mining</h3>
+          <p class="discrete">Apriori, Clustering, Classification, Association Rules...</p>
+          <div style="margin-top:1.5rem; text-align:center;">
+            <span class="btn" style="padding:0.9rem 2rem; font-size:1rem;">View Notes →</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <h2 class="section-title">Get In Touch</h2>
+    <div class="contact-form">
+      <form id="contactForm">
+        <div class="form-row">
+          <input type="text" placeholder="Your Name" required>
+          <input type="email" placeholder="Your Email" required>
+        </div>
+        <div style="margin:1.8rem 0;">
+          <input type="text" placeholder="Subject" required>
+        </div>
+        <div>
+          <textarea placeholder="Your Message..." required></textarea>
+        </div>
+        <button type="submit" class="btn" style="width:100%; margin-top:2rem; padding:1.2rem;">Send Message</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+       <p>© 2026 Binaya | binayapokhrel.com.np</p>
+    <div class="socials">
+      <a href="https://github.com" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="www.linkedin.com/in/parivesh-adhikari-425a832b2" target="_blank"><i class="fab fa-linkedin"></i></a>
+    </div>
+ 
+  </footer>
+
+ <script src="script.js"></script>
 
 </body>
 </html>
-
