@@ -1,65 +1,346 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Will You Be My Valentine?</title>
-    <style>
-        body {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            background-color: pink;
-            overflow: hidden;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parivesh | Portfolio</title>
 
-        h1 {
-            margin-top: 100px;
-            font-size: 40px;
-        }
+<!-- Font Awesome Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-        .btn {
-            padding: 15px 30px;
-            font-size: 18px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            position: absolute;
-        }
+<style>
+:root{
+    --bg-color:#0f172a;
+    --text-color:white;
+    --card-bg:#1e293b;
+    --primary:#38bdf8;
+}
 
-        #yes {
-            background-color: red;
-            color: white;
-            left: 45%;
-            top: 50%;
-        }
+.light-mode{
+    --bg-color:#f8fafc;
+    --text-color:#0f172a;
+    --card-bg:white;
+    --primary:#2563eb;
+}
 
-        #no {
-            background-color: gray;
-            color: white;
-            left: 55%;
-            top: 50%;
-        }
-    </style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:var(--bg-color);
+    color:var(--text-color);
+    transition:0.3s;
+}
+
+/* Navbar */
+nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 40px;
+    background:var(--card-bg);
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+nav h2{
+    color:var(--primary);
+}
+
+nav ul{
+    list-style:none;
+    display:flex;
+    gap:20px;
+}
+
+nav ul li a{
+    text-decoration:none;
+    color:var(--text-color);
+    transition:0.3s;
+}
+
+nav ul li a:hover{
+    color:var(--primary);
+}
+
+.menu-btn{
+    display:none;
+    font-size:25px;
+    cursor:pointer;
+}
+
+/* Hero */
+.hero{
+    min-height:90vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:40px;
+}
+
+.hero-container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:60px;
+    flex-wrap:wrap;
+}
+
+.hero-text{
+    max-width:500px;
+}
+
+.hero-text h1{
+    font-size:45px;
+}
+
+.hero-text span{
+    color:var(--primary);
+}
+
+.hero-image img{
+    width:280px;
+    height:280px;
+    object-fit:cover;
+    border-radius:50%;
+    border:5px solid var(--primary);
+    box-shadow:0 0 25px var(--primary);
+    transition:0.3s;
+}
+
+.hero-image img:hover{
+    transform:scale(1.05);
+}
+
+/* Social Icons */
+.social-icons{
+    margin-top:20px;
+    display:flex;
+    gap:20px;
+}
+
+.social-icons a{
+    font-size:22px;
+    color:var(--text-color);
+    transition:0.3s;
+}
+
+.social-icons a:hover{
+    color:var(--primary);
+    transform:scale(1.2);
+}
+
+/* Button */
+.btn{
+    margin-top:20px;
+    padding:10px 20px;
+    background:var(--primary);
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    color:white;
+}
+
+/* Sections */
+section{
+    padding:60px 40px;
+}
+
+h2{
+    text-align:center;
+    margin-bottom:30px;
+    color:var(--primary);
+}
+
+/* Skills */
+.skills-container{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:15px;
+}
+
+.skill{
+    background:var(--card-bg);
+    padding:10px 20px;
+    border-radius:20px;
+}
+
+/* Projects */
+.projects-container{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+
+.project{
+    background:var(--card-bg);
+    padding:20px;
+    border-radius:10px;
+    transition:0.3s;
+}
+
+.project:hover{
+    transform:translateY(-5px);
+}
+
+/* Contact */
+form{
+    max-width:500px;
+    margin:auto;
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+input, textarea{
+    padding:10px;
+    border-radius:5px;
+    border:1px solid #ccc;
+}
+
+footer{
+    text-align:center;
+    padding:20px;
+    background:var(--card-bg);
+}
+
+/* Responsive */
+@media(max-width:768px){
+    nav ul{
+        position:absolute;
+        top:60px;
+        right:0;
+        background:var(--card-bg);
+        flex-direction:column;
+        width:200px;
+        display:none;
+        padding:20px;
+    }
+
+    nav ul.active{
+        display:flex;
+    }
+
+    .menu-btn{
+        display:block;
+    }
+
+    .hero-container{
+        flex-direction:column-reverse;
+        text-align:center;
+    }
+
+    .social-icons{
+        justify-content:center;
+    }
+}
+
+/* Animation */
+.hidden{
+    opacity:0;
+    transform:translateY(30px);
+    transition:1s;
+}
+
+.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+html{
+    scroll-behavior:smooth;
+}
+</style>
 </head>
+
 <body>
 
-    <h1>Will You Be My Valentine? 💘</h1>
+<nav>
+    <h2>Parivesh</h2>
+    <ul id="menu">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div>
+        <button onclick="toggleTheme()" class="btn">🌙</button>
+        <span class="menu-btn" onclick="toggleMenu()">☰</span>
+    </div>
+</nav>
 
-    <button id="yes" class="btn" onclick="yesClicked()">Yes ❤️</button>
-    <button id="no" class="btn" onmouseover="moveButton()">No 😜</button>
+<section class="hero hidden" id="home">
+    <div class="hero-container">
 
-    <script>
-        function yesClicked() {
-            document.body.innerHTML = "<h1>Yayyy!!! ❤️🥰 You made my day!</h1>";
+        <div class="hero-text">
+            <h1>Hello, I'm <span>Parivesh Adhikari</span></h1>
+            <p>IT Officer | Web Developer | Network Enthusiast</p>
+
+            <!-- Social Links -->
+            <div class="social-icons">
+                <a href="https://wa.me/9842580553" target="_blank">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+
+                <a href="www.linkedin.com/in/parivesh-adhikari" target="_blank">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+
+                <a href="https://github.com/adhikariparivesh" target="_blank">
+                    <i class="fab fa-github"></i>
+                </a>
+            </div>
+
+            <a href="#contact"><button class="btn">Hire Me</button></a>
+        </div>
+
+        <div class="hero-image">
+            <img src="profile.jpeg" alt="Profile Photo">
+        </div>
+
+    </div>
+</section>
+
+<section class="hidden" id="about">
+    <h2>About Me</h2>
+    <p style="text-align:center;max-width:700px;margin:auto;">
+        I am passionate about networking, cybersecurity, and full-stack development.
+        I enjoy building clean and responsive web applications.
+    </p>
+</section>
+
+<footer>
+    <p>© 2026 Parivesh Adhikari | All Rights Reserved</p>
+</footer>
+
+<script>
+function toggleMenu(){
+    document.getElementById("menu").classList.toggle("active");
+}
+
+function toggleTheme(){
+    document.body.classList.toggle("light-mode");
+}
+
+const observer = new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+        if(entry.isIntersecting){
+            entry.target.classList.add("show");
         }
+    });
+});
 
-        function moveButton() {
-            var button = document.getElementById("no");
-            var x = Math.random() * (window.innerWidth - 100);
-            var y = Math.random() * (window.innerHeight - 50);
-
-            button.style.left = x + "px";
-            button.style.top = y + "px";
-        }
-    </script>
+document.querySelectorAll(".hidden").forEach(el=>{
+    observer.observe(el);
+});
+</script>
 
 </body>
 </html>
