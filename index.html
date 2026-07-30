@@ -1,293 +1,936 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Parivesh Education | </title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
-  <style>
-    .card-hover {
-      transition: all 0.3s ease;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Parivesh Education | Notes Hub &amp; Teacher Portfolio</title>
+<meta name="description" content="Chapter-wise study notes and teacher portfolio by Parivesh Education."/>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+
+<script>
+  // Apply saved theme before paint to avoid a flash of the wrong theme.
+  if (localStorage.getItem('ph-theme') === 'dark' ||
+      (!('ph-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.classList.add('dark');
+  }
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ['Poppins', 'sans-serif'],
+          body: ['Inter', 'sans-serif'],
+        },
+        colors: {
+          brand: {
+            50: '#eff6ff', 100:'#dbeafe', 200:'#bfdbfe', 300:'#93c5fd', 400:'#60a5fa',
+            500:'#3b82f6', 600:'#2563eb', 700:'#1d4ed8', 800:'#1e40af', 900:'#1e1b4b'
+          },
+          gold: {
+            50:'#fffbeb', 100:'#fef3c7', 300:'#fcd34d', 500:'#d97706', 600:'#b45309', 700:'#92400e'
+          }
+        }
+      }
     }
-    .card-hover:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-    }
-    .nav-link {
-      position: relative;
-    }
-    .nav-link:after {
-      content: '';
-      position: absolute;
-      width: 0;
-      height: 2px;
-      bottom: -2px;
-      left: 0;
-      background-color: #2563eb;
-      transition: width 0.3s;
-    }
-    .nav-link:hover:after {
-      width: 100%;
-    }
-  </style>
+  };
+</script>
+
+<style>
+  :root{ --ring: 37 99 235; }
+  html{ font-family: 'Inter', sans-serif; }
+  h1,h2,h3,h4, .font-display{ font-family: 'Poppins', sans-serif; }
+
+  /* Subtle notebook-line texture used behind hero/portfolio banners — ties back to the "notes" identity */
+  .notebook-bg{
+    background-image:
+      linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+    background-size: 100% 2.25rem;
+  }
+
+  .card-hover{ transition: transform .25s ease, box-shadow .25s ease; }
+  .card-hover:hover{ transform: translateY(-6px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.10), 0 8px 10px -6px rgb(0 0 0 / 0.10); }
+
+  .nav-link{ position: relative; }
+  .nav-link::after{
+    content:''; position:absolute; width:0; height:2px; bottom:-4px; left:0;
+    background-color: currentColor; transition: width .25s ease;
+  }
+  .nav-link:hover::after, .nav-link[data-active="true"]::after{ width:100%; }
+
+  /* Ribbon badge shape for achievements & certifications — signature element */
+  .ribbon{
+    position:relative;
+    clip-path: polygon(50% 0%, 100% 20%, 100% 100%, 50% 82%, 0% 100%, 0% 20%);
+  }
+
+  /* Vertical timeline connector for publications & thesis */
+  .timeline-item{ position:relative; padding-left:1.75rem; }
+  .timeline-item::before{
+    content:''; position:absolute; left:0; top:0.35rem; width:0.65rem; height:0.65rem;
+    border-radius:9999px; background: rgb(37 99 235); box-shadow: 0 0 0 4px rgba(37,99,235,0.15);
+  }
+  .timeline-item::after{
+    content:''; position:absolute; left:0.3rem; top:1.1rem; bottom:-1.75rem; width:1px;
+    background: rgb(203 213 225);
+  }
+  .dark .timeline-item::after{ background: rgb(51 65 85); }
+  .timeline-item:last-child::after{ display:none; }
+
+  ::-webkit-scrollbar{ height:6px; width:6px; }
+  ::-webkit-scrollbar-thumb{ background:#94a3b8; border-radius:9999px; }
+
+  .no-scrollbar::-webkit-scrollbar{ display:none; }
+  .no-scrollbar{ -ms-overflow-style:none; scrollbar-width:none; }
+
+  [data-page]{ display:none; }
+  [data-page].active{ display:block; animation: fadeIn .35s ease; }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  @media (prefers-reduced-motion: reduce){
+    .card-hover, .card-hover:hover, [data-page].active{ transition:none; animation:none; transform:none; }
+  }
+
+  :focus-visible{ outline: 2px solid rgb(37 99 235); outline-offset: 2px; }
+</style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
 
-  <!-- Navbar -->
-  <nav class="bg-white dark:bg-gray-900 border-b sticky top-0 z-50 shadow-sm">
-    <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <div class="w-11 h-11 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl">P</div>
-        <div>
-          <h1 class="text-2xl font-bold">Parivesh Education</h1>
-          <p class="text-xs text-gray-500 dark:text-gray-400">Notes Hub</p>
-        </div>
-      </div>
+<body class="bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 font-body antialiased">
 
-      <div class="flex items-center gap-6">
-        <button id="theme-toggle" class="p-3 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-800">
-          <i class="fas fa-moon text-xl"></i>
-        </button>
-        <button onclick="showAdminModal()" 
-                class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl flex items-center gap-2 text-sm font-medium">
-          <i class="fas fa-cog"></i> Admin
-        </button>
+<!-- ==================== NAVBAR ==================== -->
+<nav class="bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800 sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+    <a href="#notes" class="flex items-center gap-3" onclick="navigateTo('notes')">
+      <div class="w-10 h-10 sm:w-11 sm:h-11 bg-gradient-to-br from-brand-600 to-brand-800 rounded-2xl flex items-center justify-center text-white font-display font-bold text-xl">P</div>
+      <div>
+        <h1 class="text-lg sm:text-xl font-display font-bold leading-tight">Parivesh Education</h1>
+        <p class="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400 -mt-0.5">Notes Hub &amp; Teacher Portfolio</p>
       </div>
+    </a>
+
+    <!-- Desktop nav -->
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#notes" onclick="navigateTo('notes')" data-nav="notes" class="nav-link font-medium text-sm text-gray-700 dark:text-gray-200 hover:text-brand-600 dark:hover:text-brand-400">Notes Hub</a>
+      <a href="#portfolio" onclick="navigateTo('portfolio')" data-nav="portfolio" class="nav-link font-medium text-sm text-gray-700 dark:text-gray-200 hover:text-brand-600 dark:hover:text-brand-400">Teacher Portfolio</a>
     </div>
-  </nav>
+
+    <div class="flex items-center gap-2 sm:gap-3">
+      <button id="theme-toggle" aria-label="Toggle dark mode" class="p-2.5 sm:p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200">
+        <i class="fa-solid fa-moon text-lg" id="theme-icon"></i>
+      </button>
+      <button onclick="showAdminModal()" aria-haspopup="dialog"
+              class="px-3.5 sm:px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl flex items-center gap-2 text-sm font-medium shadow-sm shadow-brand-600/20">
+        <i class="fa-solid fa-gear"></i> <span class="hidden sm:inline">Admin</span>
+      </button>
+      <button id="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Open menu" aria-expanded="false" class="md:hidden p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800">
+        <i class="fa-solid fa-bars text-lg"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile nav -->
+  <div id="mobile-menu" class="hidden md:hidden border-t border-gray-200 dark:border-gray-800 px-4 py-3 flex flex-col gap-1">
+    <a href="#notes" onclick="navigateTo('notes')" class="px-3 py-2.5 rounded-lg font-medium text-sm hover:bg-gray-100 dark:hover:bg-gray-800">Notes Hub</a>
+    <a href="#portfolio" onclick="navigateTo('portfolio')" class="px-3 py-2.5 rounded-lg font-medium text-sm hover:bg-gray-100 dark:hover:bg-gray-800">Teacher Portfolio</a>
+  </div>
+</nav>
+
+<main>
+<!-- ==================== PAGE: NOTES HUB ==================== -->
+<div data-page="notes" class="active">
 
   <!-- Hero -->
-  <section class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-28">
-    <div class="max-w-7xl mx-auto px-6 text-center">
-      <h2 class="text-5xl md:text-6xl font-bold leading-tight">Quality Notes for<br>Students</h2>
-      <p class="mt-6 text-xl text-blue-100 max-w-2xl mx-auto">
-        Well-organized, chapter-wise notes with direct OneDrive access.
+  <section class="relative overflow-hidden bg-gradient-to-br from-brand-600 via-brand-700 to-brand-900 text-white py-20 sm:py-28 notebook-bg">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 text-center relative">
+      <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-xs sm:text-sm font-medium tracking-wide">
+        <i class="fa-solid fa-book-open"></i> Chapter-wise &amp; exam-ready
+      </span>
+      <h2 class="mt-6 text-4xl sm:text-5xl md:text-6xl font-display font-extrabold leading-tight">
+        Quality Notes for<br class="hidden sm:block"> Students
+      </h2>
+      <p class="mt-5 text-base sm:text-xl text-blue-100 max-w-2xl mx-auto">
+        Well-organized, chapter-wise notes with direct OneDrive access — searchable, mobile-friendly, and always up to date.
       </p>
-      <button onclick="document.getElementById('notes-section').scrollIntoView({ behavior: 'smooth' })" 
-              class="mt-10 px-8 py-4 bg-white text-blue-700 font-semibold rounded-2xl text-lg hover:bg-gray-100 transition">
-        Browse All Notes →
-      </button>
+      <div class="mt-9 flex flex-col sm:flex-row gap-3 justify-center">
+        <button onclick="document.getElementById('notes-section').scrollIntoView({ behavior: 'smooth' })"
+                class="px-7 py-3.5 bg-white text-brand-700 font-semibold rounded-xl text-base hover:bg-blue-50 transition shadow-lg shadow-black/10">
+          Browse All Notes <i class="fa-solid fa-arrow-right ml-1"></i>
+        </button>
+        <button onclick="navigateTo('portfolio')"
+                class="px-7 py-3.5 bg-white/10 border border-white/25 text-white font-semibold rounded-xl text-base hover:bg-white/20 transition">
+          <i class="fa-solid fa-graduation-cap mr-1"></i> Meet the Teacher
+        </button>
+      </div>
+
+      <!-- Stats -->
+      <div id="hero-stats" class="mt-12 grid grid-cols-3 gap-3 sm:gap-6 max-w-lg mx-auto text-center"></div>
     </div>
   </section>
 
   <!-- Notes Section -->
-  <section id="notes-section" class="py-16">
-    <div class="max-w-7xl mx-auto px-6">
-      <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
-        <h2 class="text-4xl font-bold">Chapter-wise Notes</h2>
-        
-        <div class="flex w-full md:w-auto gap-3">
-          <input type="text" id="search" 
-                 placeholder="Search any chapter or topic..." 
-                 class="flex-1 px-6 py-4 rounded-3xl border border-gray-300 dark:border-gray-700 dark:bg-gray-900 focus:outline-none focus:border-blue-500"/>
+  <section id="notes-section" class="py-14 sm:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-8 gap-4">
+        <h2 class="text-3xl sm:text-4xl font-display font-bold">Chapter-wise Notes</h2>
+
+        <div class="relative w-full md:w-96">
+          <i class="fa-solid fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <input type="text" id="search" aria-label="Search chapters"
+                 placeholder="Search any chapter or topic..."
+                 class="w-full pl-12 pr-10 py-3.5 rounded-2xl border border-gray-300 dark:border-gray-700 dark:bg-gray-900 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"/>
+          <button id="search-clear" onclick="clearSearch()" aria-label="Clear search"
+                  class="hidden absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
         </div>
       </div>
 
       <!-- Subjects Tabs -->
-      <div id="subjects-tabs" class="flex flex-wrap gap-3 mb-10"></div>
+      <div id="subjects-tabs" class="flex gap-2.5 mb-8 overflow-x-auto no-scrollbar pb-1"></div>
 
       <!-- Chapters Grid -->
-      <div id="chapters-grid" class="grid md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+      <div id="chapters-grid" class="grid sm:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6"></div>
+
+      <!-- Empty state -->
+      <div id="notes-empty" class="hidden text-center py-16 text-gray-500 dark:text-gray-400">
+        <i class="fa-solid fa-folder-open text-4xl mb-3"></i>
+        <p class="font-medium">No chapters match your search.</p>
+        <p class="text-sm">Try a different keyword, or clear the search box.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ==================== PAGE: TEACHER PORTFOLIO ==================== -->
+<div data-page="portfolio">
+
+  <!-- Portfolio Banner -->
+  <section class="relative overflow-hidden bg-gradient-to-br from-gray-900 via-brand-900 to-brand-800 text-white py-16 sm:py-20 notebook-bg">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-col sm:flex-row items-center sm:items-end gap-6">
+        <div id="portfolio-avatar" class="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl bg-white/10 border border-white/20 flex items-center justify-center text-4xl font-display font-bold shrink-0 overflow-hidden"></div>
+        <div class="text-center sm:text-left">
+          <p class="text-xs sm:text-sm uppercase tracking-widest text-gold-300 font-semibold" id="portfolio-dept">Educator</p>
+          <h2 id="portfolio-name" class="text-3xl sm:text-4xl font-display font-extrabold mt-1">Add Your Name</h2>
+          <p id="portfolio-title" class="mt-1 text-blue-100 text-sm sm:text-base">Use the Admin panel to set up this profile</p>
+          <div id="portfolio-links" class="flex gap-3 justify-center sm:justify-start mt-4"></div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- Admin Modal -->
-  <div id="admin-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center">
-    <div class="bg-white dark:bg-gray-900 rounded-3xl w-full max-w-lg mx-4">
-      <div class="p-8">
-        <h3 class="text-2xl font-bold mb-6">Admin Panel</h3>
-        <input type="password" id="admin-password" placeholder="Enter Password" 
-               class="w-full px-5 py-4 rounded-2xl border dark:bg-gray-800 mb-6 text-lg"/>
-        
-        <div id="admin-panel" class="hidden space-y-6">
-          <p class="text-green-600 font-medium">✅ Access Granted</p>
-          <div class="bg-gray-100 dark:bg-gray-800 p-5 rounded-2xl text-sm">
-            <strong>How to add new notes:</strong><br>
-            Edit the <code>notesData</code> object in the script section of this file.<br><br>
-            Then refresh the page.
+  <section class="py-14 sm:py-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-16">
+
+      <!-- Bio -->
+      <div>
+        <h3 class="text-2xl font-display font-bold mb-3 flex items-center gap-2"><i class="fa-solid fa-user text-brand-600"></i> About</h3>
+        <p id="portfolio-bio" class="text-gray-600 dark:text-gray-400 leading-relaxed max-w-3xl">
+          This portfolio is empty right now. Open <strong>Admin → Manage Portfolio</strong> to add a bio, achievements, publications, certifications, and thesis work.
+        </p>
+      </div>
+
+      <!-- Achievements -->
+      <div>
+        <h3 class="text-2xl font-display font-bold mb-5 flex items-center gap-2"><i class="fa-solid fa-award text-gold-500"></i> Achievements</h3>
+        <div id="achievements-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+        <p id="achievements-empty" class="hidden text-sm text-gray-500 dark:text-gray-400">No achievements added yet.</p>
+      </div>
+
+      <!-- Publications -->
+      <div>
+        <h3 class="text-2xl font-display font-bold mb-6 flex items-center gap-2"><i class="fa-solid fa-flask text-brand-600"></i> Publications &amp; Research</h3>
+        <div id="publications-list" class="space-y-7 max-w-3xl"></div>
+        <p id="publications-empty" class="hidden text-sm text-gray-500 dark:text-gray-400">No publications added yet.</p>
+      </div>
+
+      <!-- Certifications -->
+      <div>
+        <h3 class="text-2xl font-display font-bold mb-5 flex items-center gap-2"><i class="fa-solid fa-certificate text-gold-500"></i> Certifications</h3>
+        <div id="certifications-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+        <p id="certifications-empty" class="hidden text-sm text-gray-500 dark:text-gray-400">No certifications added yet.</p>
+      </div>
+
+      <!-- Thesis -->
+      <div>
+        <h3 class="text-2xl font-display font-bold mb-6 flex items-center gap-2"><i class="fa-solid fa-graduation-cap text-brand-600"></i> Thesis &amp; Dissertation Work</h3>
+        <div id="thesis-list" class="space-y-7 max-w-3xl"></div>
+        <p id="thesis-empty" class="hidden text-sm text-gray-500 dark:text-gray-400">No thesis work added yet.</p>
+      </div>
+
+    </div>
+  </section>
+</div>
+</main>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="border-t border-gray-200 dark:border-gray-800 py-8 mt-4">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
+    <p>&copy; <span id="year"></span> Parivesh Education. All notes are shared for educational use.</p>
+    <div class="flex gap-5">
+      <a href="#notes" onclick="navigateTo('notes')" class="hover:text-brand-600">Notes Hub</a>
+      <a href="#portfolio" onclick="navigateTo('portfolio')" class="hover:text-brand-600">Teacher Portfolio</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ==================== ADMIN MODAL ==================== -->
+<div id="admin-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Admin panel">
+  <div class="bg-white dark:bg-gray-900 rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+    <div class="p-6 sm:p-8">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-2xl font-display font-bold">Admin Panel</h3>
+        <button onclick="hideAdminModal()" aria-label="Close" class="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <div id="admin-login">
+        <label for="admin-password" class="text-sm font-medium text-gray-600 dark:text-gray-400">Password</label>
+        <input type="password" id="admin-password" placeholder="Enter password"
+               class="w-full mt-2 px-5 py-3.5 rounded-2xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-base focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"/>
+        <p id="admin-error" class="hidden text-sm text-red-600 mt-2">Incorrect password. Try again.</p>
+        <p class="text-xs text-gray-400 mt-3">Demo password: <code>admin123</code> — change it in the script before you deploy.</p>
+      </div>
+
+      <div id="admin-panel" class="hidden">
+        <div class="flex items-center gap-2 mb-2 text-emerald-600 text-sm font-medium"><i class="fa-solid fa-circle-check"></i> Access granted</div>
+        <p class="text-xs text-gray-400 mb-5">Changes save to this browser's local storage, so they'll appear here on your next visit — but not for other visitors until you also update the code on your hosting.</p>
+
+        <!-- Tabs -->
+        <div class="flex gap-2 mb-6 border-b border-gray-200 dark:border-gray-800">
+          <button onclick="setAdminTab('notes')" id="admin-tab-notes" class="admin-tab px-4 py-2.5 text-sm font-medium border-b-2 -mb-px">Manage Notes</button>
+          <button onclick="setAdminTab('portfolio')" id="admin-tab-portfolio" class="admin-tab px-4 py-2.5 text-sm font-medium border-b-2 -mb-px">Manage Portfolio</button>
+        </div>
+
+        <!-- Manage Notes -->
+        <div id="admin-notes" class="space-y-5">
+          <div>
+            <label class="text-xs font-semibold uppercase tracking-wide text-gray-500">Class / Subject</label>
+            <div class="flex gap-2 mt-1.5">
+              <select id="note-class-select" class="flex-1 px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm"></select>
+              <button onclick="promptNewClass()" class="px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-plus"></i></button>
+            </div>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-3">
+            <input id="note-chapter" placeholder="Chapter title" class="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm sm:col-span-2"/>
+            <input id="note-desc" placeholder="Short description" class="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm sm:col-span-2"/>
+            <input id="note-link" placeholder="OneDrive / file link (https://...)" class="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm sm:col-span-2"/>
+            <input id="note-date" type="date" class="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm"/>
+            <button onclick="addNote()" class="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium">Add Chapter</button>
+          </div>
+
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Existing chapters</p>
+            <div id="admin-notes-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
           </div>
         </div>
 
-        <button onclick="hideAdminModal()" 
-                class="mt-6 w-full py-4 bg-gray-200 dark:bg-gray-700 rounded-2xl font-medium">
-          Close
-        </button>
+        <!-- Manage Portfolio -->
+        <div id="admin-portfolio" class="hidden space-y-6">
+          <div class="grid sm:grid-cols-2 gap-3">
+            <input id="pf-name" placeholder="Full name" class="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm"/>
+            <input id="pf-dept" placeholder="Department (e.g. Computer Science)" class="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm"/>
+            <input id="pf-title" placeholder="Designation (e.g. PGT Computer Science)" class="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm sm:col-span-2"/>
+            <input id="pf-photo" placeholder="Photo URL (optional)" class="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm sm:col-span-2"/>
+            <textarea id="pf-bio" placeholder="Short bio" rows="3" class="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm sm:col-span-2"></textarea>
+            <input id="pf-linkedin" placeholder="LinkedIn URL (optional)" class="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm"/>
+            <input id="pf-email" placeholder="Contact email (optional)" class="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm"/>
+          </div>
+          <button onclick="saveProfile()" class="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium">Save Profile</button>
+
+          <hr class="border-gray-200 dark:border-gray-800"/>
+
+          <!-- Achievements -->
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Achievements</p>
+            <div class="flex gap-2">
+              <input id="ach-input" placeholder="e.g. Best Teacher Award 2025" class="flex-1 px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm"/>
+              <button onclick="addAchievement()" class="px-4 py-2.5 rounded-xl bg-gold-500 hover:bg-gold-600 text-white text-sm font-medium">Add</button>
+            </div>
+            <div id="admin-ach-list" class="mt-2 space-y-2"></div>
+          </div>
+
+          <!-- Publications -->
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Publications</p>
+            <div class="grid sm:grid-cols-2 gap-2">
+              <input id="pub-title" placeholder="Title" class="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm sm:col-span-2"/>
+              <input id="pub-venue" placeholder="Journal / Conference" class="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm"/>
+              <input id="pub-year" placeholder="Year" class="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm"/>
+              <input id="pub-link" placeholder="Link (optional)" class="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm sm:col-span-2"/>
+              <button onclick="addPublication()" class="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium sm:col-span-2">Add Publication</button>
+            </div>
+            <div id="admin-pub-list" class="mt-2 space-y-2"></div>
+          </div>
+
+          <!-- Certifications -->
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Certifications</p>
+            <div class="grid sm:grid-cols-2 gap-2">
+              <input id="cert-name" placeholder="Certification name" class="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm sm:col-span-2"/>
+              <input id="cert-issuer" placeholder="Issuing body" class="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm"/>
+              <input id="cert-year" placeholder="Year" class="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm"/>
+              <button onclick="addCertification()" class="px-4 py-2.5 rounded-xl bg-gold-500 hover:bg-gold-600 text-white text-sm font-medium sm:col-span-2">Add Certification</button>
+            </div>
+            <div id="admin-cert-list" class="mt-2 space-y-2"></div>
+          </div>
+
+          <!-- Thesis -->
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Thesis / Dissertation</p>
+            <div class="grid sm:grid-cols-2 gap-2">
+              <input id="th-title" placeholder="Title" class="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm sm:col-span-2"/>
+              <input id="th-degree" placeholder="Degree (e.g. M.Ed, Ph.D)" class="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm"/>
+              <input id="th-year" placeholder="Year" class="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm"/>
+              <textarea id="th-summary" placeholder="Short summary" rows="2" class="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-sm sm:col-span-2"></textarea>
+              <button onclick="addThesis()" class="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium sm:col-span-2">Add Thesis Entry</button>
+            </div>
+            <div id="admin-th-list" class="mt-2 space-y-2"></div>
+          </div>
+
+          <button onclick="resetDemoData()" class="text-xs text-red-500 hover:text-red-600 underline">Reset all data to defaults</button>
+        </div>
       </div>
+
+      <button onclick="hideAdminModal()" class="mt-8 w-full py-3.5 bg-gray-100 dark:bg-gray-800 rounded-2xl font-medium text-sm">Close</button>
     </div>
   </div>
+</div>
 
-  <script>
-    // ==================== DATA ====================
-    let notesData = {
-      "Class X": [
-        {
-          id: 1,
-          chapter: "Data Communication and Networking",
-          desc: "Sharing and connecting information between devices",
-          link: "https://1drv.ms/w/c/497b24478e3e5744/IQBp4e6HClpjTa79howfcyS7AY5e8rHgz5gHJyuucmmOnJI?e=JVZwhU",
-          date: "2026-05-22"
-        },
-        {
-          id: 2,
-          chapter: "AI and Contemporary Technology",
-          desc: "AI and Its Importance",
-          link: "https://1drv.ms/w/c/497b24478e3e5744/IQAeawx_cgeNRoV-L-PvA-f6AQCN2wE9Ynpwvvao0Yecbj4?e=fAhWZU",
-          date: "2026-05-29"
-        },
-         {
-          id: 3,
-          chapter: "Multimedia",
-          desc: "Text,Audio,Graphics,Videos & Animation",
-          link: "https://1drv.ms/w/c/497b24478e3e5744/IQBaS7jWe109QKVSjuJhdYM9Aeeg5bD3iHnNH5YVEmGSQNM?e=SYakfO",
-          date: "2026-06-18"
-        },
-           {
-          id: 4,
-          chapter: "Database Presentation",
-          desc: "Data and Information",
-          link: "https://app.presentations.ai/view/zzhivA74aU",
-          date: "2026-06-16"
-        },
-         {
-          id: 5,
-          chapter: "Database Notes",
-          desc: "Data and Information",
-          link: "https://1drv.ms/w/c/497b24478e3e5744/IQBq3dThwACTR5PEF6QnFumXAZ0SG2xJ-PMxcLTSf2CKfZQ?e=W8L66h",
-          date: "2026-07-21"
-        }
-      ],
-      "Class IX": [
-        {
-          id: 1,
-          chapter: "Book PDF",
-          desc: "Computer Science.",
-          link: "https://1drv.ms/b/c/497b24478e3e5744/IQDyae6FiV3gRZpTBV-hA3OeAcGjawZqfFh6j4MPJ51l140?e=UreOm3",
-          date: "2026-04-28"
-        },
-          {
-          id: 2,
-          chapter: "Internet and Social Media",
-          desc: "Communication",
-          link: "https://1drv.ms/p/c/497b24478e3e5744/IQCOjxjO0ziyQ5I_h4Cn9uPSAcT8IAZurgCLniFgDJgWx_o?e=XNXl83",
-          date: "2026-04-28"
-        },
-      ],
-      "Class VIII": [
-        {
-          id: 1,
-          chapter: "Book PDF",
-          desc: "Computer Science.",
-          link: "https://onedrive.live.com/your-english-chapter1-link",
-          date: "2026-05-10"
-        }
-      ]
-    };
+<script>
+// ==================== DEFAULT / SEED DATA ====================
+// These are the site's starting values. Once the admin adds or edits anything,
+// the data is persisted to this browser's localStorage and those saved
+// values take over on every future visit (see loadState() below).
+const defaultNotesData = {
+  "Class X": [
+    { id: 1, chapter: "Data Communication and Networking", desc: "Sharing and connecting information between devices", link: "https://1drv.ms/w/c/497b24478e3e5744/IQBp4e6HClpjTa79howfcyS7AY5e8rHgz5gHJyuucmmOnJI?e=JVZwhU", date: "2026-05-22" },
+    { id: 2, chapter: "AI and Contemporary Technology", desc: "AI and Its Importance", link: "https://1drv.ms/w/c/497b24478e3e5744/IQAeawx_cgeNRoV-L-PvA-f6AQCN2wE9Ynpwvvao0Yecbj4?e=fAhWZU", date: "2026-05-29" },
+    { id: 3, chapter: "Multimedia", desc: "Text,Audio,Graphics,Videos & Animation", link: "https://1drv.ms/w/c/497b24478e3e5744/IQBaS7jWe109QKVSjuJhdYM9Aeeg5bD3iHnNH5YVEmGSQNM?e=SYakfO", date: "2026-06-18" },
+    { id: 4, chapter: "Database Presentation", desc: "Data and Information", link: "https://app.presentations.ai/view/zzhivA74aU", date: "2026-06-16" },
+    { id: 5, chapter: "Database Notes", desc: "Data and Information", link: "https://1drv.ms/w/c/497b24478e3e5744/IQBq3dThwACTR5PEF6QnFumXAZ0SG2xJ-PMxcLTSf2CKfZQ?e=W8L66h", date: "2026-07-21" }
+  ],
+  "Class IX": [
+    { id: 1, chapter: "Book PDF", desc: "Computer Science.", link: "https://1drv.ms/b/c/497b24478e3e5744/IQDyae6FiV3gRZpTBV-hA3OeAcGjawZqfFh6j4MPJ51l140?e=UreOm3", date: "2026-04-28" },
+    { id: 2, chapter: "Internet and Social Media", desc: "Communication", link: "https://1drv.ms/p/c/497b24478e3e5744/IQCOjxjO0ziyQ5I_h4Cn9uPSAcT8IAZurgCLniFgDJgWx_o?e=XNXl83", date: "2026-04-28" }
+  ],
+  "Class VIII": [
+    { id: 1, chapter: "Book PDF", desc: "Computer Science.", link: "https://onedrive.live.com/your-english-chapter1-link", date: "2026-05-10" }
+  ]
+};
 
-    let currentSubject = "Science";
+const defaultPortfolioData = {
+  name: "", department: "", title: "", photo: "", bio: "", linkedin: "", email: "",
+  achievements: [], publications: [], certifications: [], thesis: []
+};
 
-    // ==================== THEME ====================
-    const themeToggle = document.getElementById('theme-toggle');
-    themeToggle.addEventListener('click', () => {
-      document.documentElement.classList.toggle('dark');
-    });
+const ADMIN_PASSWORD = "admin123"; // change this before deploying
 
-    // ==================== RENDER FUNCTIONS ====================
-    function renderSubjects() {
-      const container = document.getElementById('subjects-tabs');
-      container.innerHTML = '';
+let notesData = {};
+let portfolioData = {};
+let currentSubject = "";
 
-      Object.keys(notesData).forEach(subject => {
-        const isActive = subject === currentSubject;
-        const btn = document.createElement('button');
-        btn.className = `px-6 py-3 rounded-3xl font-medium transition ${isActive ? 
-          'bg-blue-600 text-white' : 
-          'bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700'}`;
-        btn.textContent = subject;
-        btn.onclick = () => {
-          currentSubject = subject;
-          renderSubjects();
-          renderChapters();
-        };
-        container.appendChild(btn);
-      });
+// ==================== PERSISTENCE ====================
+function loadState() {
+  try {
+    const savedNotes = localStorage.getItem('ph-notes');
+    notesData = savedNotes ? JSON.parse(savedNotes) : JSON.parse(JSON.stringify(defaultNotesData));
+  } catch { notesData = JSON.parse(JSON.stringify(defaultNotesData)); }
+
+  try {
+    const savedPortfolio = localStorage.getItem('ph-portfolio');
+    portfolioData = savedPortfolio ? JSON.parse(savedPortfolio) : JSON.parse(JSON.stringify(defaultPortfolioData));
+  } catch { portfolioData = JSON.parse(JSON.stringify(defaultPortfolioData)); }
+
+  currentSubject = Object.keys(notesData)[0] || "";
+}
+
+function saveNotes() { localStorage.setItem('ph-notes', JSON.stringify(notesData)); }
+function savePortfolio() { localStorage.setItem('ph-portfolio', JSON.stringify(portfolioData)); }
+
+function resetDemoData() {
+  if (!confirm("Reset all notes and portfolio data back to the original defaults? This cannot be undone.")) return;
+  localStorage.removeItem('ph-notes');
+  localStorage.removeItem('ph-portfolio');
+  loadState();
+  renderAll();
+  fillAdminForms();
+}
+
+// ==================== PAGE NAVIGATION ====================
+function navigateTo(page) {
+  document.querySelectorAll('[data-page]').forEach(el => el.classList.remove('active'));
+  document.getElementById(page === 'portfolio' ? undefined : undefined); // no-op guard
+  const target = document.querySelector(`[data-page="${page}"]`);
+  if (target) target.classList.add('active');
+
+  document.querySelectorAll('[data-nav]').forEach(el => el.setAttribute('data-active', el.dataset.nav === page ? 'true' : 'false'));
+  window.location.hash = page;
+  window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+  closeMobileMenu();
+}
+
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobile-menu');
+  const btn = document.getElementById('mobile-menu-btn');
+  const isHidden = menu.classList.contains('hidden');
+  menu.classList.toggle('hidden');
+  btn.setAttribute('aria-expanded', String(isHidden));
+}
+function closeMobileMenu() {
+  document.getElementById('mobile-menu').classList.add('hidden');
+  document.getElementById('mobile-menu-btn').setAttribute('aria-expanded', 'false');
+}
+
+// ==================== THEME ====================
+function syncThemeIcon() {
+  const icon = document.getElementById('theme-icon');
+  const isDark = document.documentElement.classList.contains('dark');
+  icon.className = isDark ? 'fa-solid fa-sun text-lg' : 'fa-solid fa-moon text-lg';
+}
+document.getElementById('theme-toggle').addEventListener('click', () => {
+  document.documentElement.classList.toggle('dark');
+  localStorage.setItem('ph-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+  syncThemeIcon();
+});
+
+// ==================== RENDER: NOTES ====================
+function renderHeroStats() {
+  const totalNotes = Object.values(notesData).reduce((sum, arr) => sum + arr.length, 0);
+  const totalClasses = Object.keys(notesData).length;
+  const latest = Object.values(notesData).flat().reduce((max, n) => (!max || n.date > max) ? n.date : max, "");
+  const stats = [
+    { label: "Notes", value: totalNotes },
+    { label: "Classes", value: totalClasses },
+    { label: "Updated", value: latest ? formatShortDate(latest) : "—" }
+  ];
+  document.getElementById('hero-stats').innerHTML = stats.map(s => `
+    <div class="bg-white/10 border border-white/15 rounded-2xl py-4">
+      <p class="text-xl sm:text-2xl font-display font-bold">${s.value}</p>
+      <p class="text-[11px] sm:text-xs text-blue-100 uppercase tracking-wide mt-0.5">${s.label}</p>
+    </div>
+  `).join('');
+}
+
+function formatShortDate(iso) {
+  const d = new Date(iso + 'T00:00:00');
+  if (isNaN(d)) return iso;
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function isRecent(iso) {
+  const d = new Date(iso + 'T00:00:00');
+  if (isNaN(d)) return false;
+  const days = (Date.now() - d.getTime()) / 86400000;
+  return days >= 0 && days <= 14;
+}
+
+function renderSubjects() {
+  const container = document.getElementById('subjects-tabs');
+  container.innerHTML = '';
+  Object.keys(notesData).forEach(subject => {
+    const isActive = subject === currentSubject;
+    const btn = document.createElement('button');
+    btn.className = `shrink-0 px-5 py-2.5 rounded-2xl font-medium text-sm transition ${isActive ?
+      'bg-brand-600 text-white shadow-sm shadow-brand-600/30' :
+      'bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200'}`;
+    btn.textContent = `${subject} (${notesData[subject].length})`;
+    btn.onclick = () => { currentSubject = subject; renderSubjects(); renderChapters(); };
+    container.appendChild(btn);
+  });
+}
+
+function renderChapters() {
+  const container = document.getElementById('chapters-grid');
+  container.innerHTML = '';
+  const chapters = [...(notesData[currentSubject] || [])].sort((a, b) => b.date.localeCompare(a.date));
+
+  chapters.forEach(ch => {
+    const card = document.createElement('div');
+    card.className = "bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl p-6 card-hover";
+    card.innerHTML = `
+      <div class="flex justify-between items-start gap-3">
+        <h3 class="font-display font-semibold text-lg leading-snug">${escapeHtml(ch.chapter)}</h3>
+        ${isRecent(ch.date) ? '<span class="shrink-0 text-[10px] font-bold uppercase tracking-wide bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400 px-2.5 py-1 rounded-full">New</span>' : ''}
+      </div>
+      <p class="mt-1 text-xs text-gray-400">${formatShortDate(ch.date)}</p>
+      <p class="mt-3 text-gray-600 dark:text-gray-400 text-sm line-clamp-3">${escapeHtml(ch.desc)}</p>
+      <div class="mt-6 flex gap-3">
+        <a href="${escapeAttr(ch.link)}" target="_blank" rel="noopener noreferrer"
+           class="flex-1 bg-brand-600 hover:bg-brand-700 text-white text-center py-3 rounded-xl font-medium text-sm transition">
+          View Notes
+        </a>
+        <button onclick="copyLink('${escapeJs(ch.link)}')" aria-label="Copy link"
+                class="px-4 border border-gray-300 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800">
+          <i class="fa-solid fa-copy"></i>
+        </button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  document.getElementById('notes-empty').classList.toggle('hidden', chapters.length !== 0);
+  applySearchFilter();
+}
+
+function copyLink(link) {
+  navigator.clipboard.writeText(link).then(() => toast("Link copied to clipboard"));
+}
+
+function applySearchFilter() {
+  const term = document.getElementById('search').value.trim().toLowerCase();
+  const cards = document.querySelectorAll('#chapters-grid > div');
+  let visibleCount = 0;
+  cards.forEach(card => {
+    const match = card.textContent.toLowerCase().includes(term);
+    card.style.display = match ? '' : 'none';
+    if (match) visibleCount++;
+  });
+  document.getElementById('notes-empty').classList.toggle('hidden', visibleCount !== 0 || cards.length === 0);
+  document.getElementById('search-clear').classList.toggle('hidden', term.length === 0);
+}
+document.getElementById('search').addEventListener('input', applySearchFilter);
+function clearSearch() {
+  document.getElementById('search').value = '';
+  applySearchFilter();
+}
+
+// ==================== RENDER: PORTFOLIO ====================
+function initials(name) {
+  return name.trim().split(/\s+/).slice(0, 2).map(w => w[0]?.toUpperCase() || '').join('') || '?';
+}
+
+function renderPortfolio() {
+  const p = portfolioData;
+  document.getElementById('portfolio-name').textContent = p.name || "Add Your Name";
+  document.getElementById('portfolio-dept').textContent = p.department || "Educator";
+  document.getElementById('portfolio-title').textContent = p.title || "Use the Admin panel to set up this profile";
+  document.getElementById('portfolio-bio').textContent = p.bio || "This portfolio is empty right now. Open Admin → Manage Portfolio to add a bio, achievements, publications, certifications, and thesis work.";
+
+  const avatar = document.getElementById('portfolio-avatar');
+  avatar.innerHTML = p.photo
+    ? `<img src="${escapeAttr(p.photo)}" alt="${escapeAttr(p.name || 'Teacher')} photo" class="w-full h-full object-cover"/>`
+    : initials(p.name || "?");
+
+  const links = document.getElementById('portfolio-links');
+  links.innerHTML = '';
+  if (p.email) links.innerHTML += `<a href="mailto:${escapeAttr(p.email)}" class="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center hover:bg-white/20" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>`;
+  if (p.linkedin) links.innerHTML += `<a href="${escapeAttr(p.linkedin)}" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center hover:bg-white/20" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>`;
+
+  // Achievements
+  const achGrid = document.getElementById('achievements-grid');
+  achGrid.innerHTML = (p.achievements || []).map(a => `
+    <div class="ribbon bg-gradient-to-br from-gold-50 to-white dark:from-gray-900 dark:to-gray-900 border border-gold-100 dark:border-gray-800 p-5 pt-6 text-center">
+      <i class="fa-solid fa-award text-gold-500 text-2xl mb-2"></i>
+      <p class="font-medium text-sm">${escapeHtml(a)}</p>
+    </div>
+  `).join('');
+  document.getElementById('achievements-empty').classList.toggle('hidden', (p.achievements || []).length !== 0);
+
+  // Publications (timeline, newest first)
+  const pubs = [...(p.publications || [])].sort((a, b) => String(b.year).localeCompare(String(a.year)));
+  document.getElementById('publications-list').innerHTML = pubs.map(pub => `
+    <div class="timeline-item">
+      <p class="text-xs font-semibold text-brand-600">${escapeHtml(String(pub.year || ''))}</p>
+      <p class="font-display font-semibold mt-0.5">${escapeHtml(pub.title)}</p>
+      <p class="text-sm text-gray-500 dark:text-gray-400">${escapeHtml(pub.venue || '')}</p>
+      ${pub.link ? `<a href="${escapeAttr(pub.link)}" target="_blank" rel="noopener noreferrer" class="text-sm text-brand-600 hover:underline">Read more <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>` : ''}
+    </div>
+  `).join('');
+  document.getElementById('publications-empty').classList.toggle('hidden', pubs.length !== 0);
+
+  // Certifications
+  const certGrid = document.getElementById('certifications-grid');
+  certGrid.innerHTML = (p.certifications || []).map(c => `
+    <div class="border border-gray-200 dark:border-gray-800 rounded-2xl p-5 flex gap-3 items-start bg-white dark:bg-gray-900">
+      <i class="fa-solid fa-certificate text-gold-500 text-xl mt-0.5"></i>
+      <div>
+        <p class="font-medium text-sm">${escapeHtml(c.name)}</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400">${escapeHtml(c.issuer || '')} ${c.year ? '· ' + escapeHtml(String(c.year)) : ''}</p>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('certifications-empty').classList.toggle('hidden', (p.certifications || []).length !== 0);
+
+  // Thesis (timeline, newest first)
+  const thesis = [...(p.thesis || [])].sort((a, b) => String(b.year).localeCompare(String(a.year)));
+  document.getElementById('thesis-list').innerHTML = thesis.map(t => `
+    <div class="timeline-item">
+      <p class="text-xs font-semibold text-brand-600">${escapeHtml(String(t.year || ''))} ${t.degree ? '· ' + escapeHtml(t.degree) : ''}</p>
+      <p class="font-display font-semibold mt-0.5">${escapeHtml(t.title)}</p>
+      ${t.summary ? `<p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${escapeHtml(t.summary)}</p>` : ''}
+    </div>
+  `).join('');
+  document.getElementById('thesis-empty').classList.toggle('hidden', thesis.length !== 0);
+}
+
+// ==================== ADMIN: NOTES MANAGEMENT ====================
+function refreshClassSelect() {
+  const select = document.getElementById('note-class-select');
+  select.innerHTML = Object.keys(notesData).map(s => `<option value="${escapeAttr(s)}">${escapeHtml(s)}</option>`).join('');
+  select.value = currentSubject;
+}
+
+function promptNewClass() {
+  const name = prompt("New class / subject name (e.g. Class XI):");
+  if (!name || !name.trim()) return;
+  if (notesData[name]) { alert("That class already exists."); return; }
+  notesData[name] = [];
+  saveNotes();
+  currentSubject = name;
+  refreshClassSelect();
+  document.getElementById('note-class-select').value = name;
+  renderAll();
+}
+
+function addNote() {
+  const cls = document.getElementById('note-class-select').value;
+  const chapter = document.getElementById('note-chapter').value.trim();
+  const desc = document.getElementById('note-desc').value.trim();
+  const link = document.getElementById('note-link').value.trim();
+  const date = document.getElementById('note-date').value || new Date().toISOString().slice(0, 10);
+
+  if (!cls || !chapter || !link) { alert("Please fill in at least the chapter title and link."); return; }
+
+  const list = notesData[cls];
+  const nextId = list.length ? Math.max(...list.map(n => n.id)) + 1 : 1;
+  list.push({ id: nextId, chapter, desc, link, date });
+  saveNotes();
+
+  document.getElementById('note-chapter').value = '';
+  document.getElementById('note-desc').value = '';
+  document.getElementById('note-link').value = '';
+  document.getElementById('note-date').value = '';
+
+  currentSubject = cls;
+  renderAll();
+  renderAdminNotesList();
+  toast("Chapter added");
+}
+
+function deleteNote(cls, id) {
+  if (!confirm("Delete this chapter?")) return;
+  notesData[cls] = notesData[cls].filter(n => n.id !== id);
+  saveNotes();
+  renderAll();
+  renderAdminNotesList();
+}
+
+function renderAdminNotesList() {
+  const cls = document.getElementById('note-class-select').value;
+  const list = notesData[cls] || [];
+  document.getElementById('admin-notes-list').innerHTML = list.map(n => `
+    <div class="flex justify-between items-center gap-2 px-3.5 py-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 text-sm">
+      <span class="truncate">${escapeHtml(n.chapter)}</span>
+      <button onclick="deleteNote('${escapeJs(cls)}', ${n.id})" class="text-red-500 hover:text-red-600 shrink-0"><i class="fa-solid fa-trash"></i></button>
+    </div>
+  `).join('') || '<p class="text-xs text-gray-400">No chapters in this class yet.</p>';
+}
+document.getElementById('note-class-select')?.addEventListener('change', renderAdminNotesList);
+
+// ==================== ADMIN: PORTFOLIO MANAGEMENT ====================
+function fillAdminForms() {
+  const p = portfolioData;
+  document.getElementById('pf-name').value = p.name || '';
+  document.getElementById('pf-dept').value = p.department || '';
+  document.getElementById('pf-title').value = p.title || '';
+  document.getElementById('pf-photo').value = p.photo || '';
+  document.getElementById('pf-bio').value = p.bio || '';
+  document.getElementById('pf-linkedin').value = p.linkedin || '';
+  document.getElementById('pf-email').value = p.email || '';
+  refreshClassSelect();
+  renderAdminNotesList();
+  renderAdminListSections();
+}
+
+function saveProfile() {
+  portfolioData.name = document.getElementById('pf-name').value.trim();
+  portfolioData.department = document.getElementById('pf-dept').value.trim();
+  portfolioData.title = document.getElementById('pf-title').value.trim();
+  portfolioData.photo = document.getElementById('pf-photo').value.trim();
+  portfolioData.bio = document.getElementById('pf-bio').value.trim();
+  portfolioData.linkedin = document.getElementById('pf-linkedin').value.trim();
+  portfolioData.email = document.getElementById('pf-email').value.trim();
+  savePortfolio();
+  renderPortfolio();
+  toast("Profile saved");
+}
+
+function addAchievement() {
+  const val = document.getElementById('ach-input').value.trim();
+  if (!val) return;
+  portfolioData.achievements = portfolioData.achievements || [];
+  portfolioData.achievements.push(val);
+  savePortfolio();
+  document.getElementById('ach-input').value = '';
+  renderPortfolio(); renderAdminListSections();
+}
+function removeAchievement(i) {
+  portfolioData.achievements.splice(i, 1);
+  savePortfolio(); renderPortfolio(); renderAdminListSections();
+}
+
+function addPublication() {
+  const title = document.getElementById('pub-title').value.trim();
+  const venue = document.getElementById('pub-venue').value.trim();
+  const year = document.getElementById('pub-year').value.trim();
+  const link = document.getElementById('pub-link').value.trim();
+  if (!title) { alert("Please add a title."); return; }
+  portfolioData.publications = portfolioData.publications || [];
+  portfolioData.publications.push({ title, venue, year, link });
+  savePortfolio();
+  ['pub-title', 'pub-venue', 'pub-year', 'pub-link'].forEach(id => document.getElementById(id).value = '');
+  renderPortfolio(); renderAdminListSections();
+}
+function removePublication(i) {
+  portfolioData.publications.splice(i, 1);
+  savePortfolio(); renderPortfolio(); renderAdminListSections();
+}
+
+function addCertification() {
+  const name = document.getElementById('cert-name').value.trim();
+  const issuer = document.getElementById('cert-issuer').value.trim();
+  const year = document.getElementById('cert-year').value.trim();
+  if (!name) { alert("Please add a certification name."); return; }
+  portfolioData.certifications = portfolioData.certifications || [];
+  portfolioData.certifications.push({ name, issuer, year });
+  savePortfolio();
+  ['cert-name', 'cert-issuer', 'cert-year'].forEach(id => document.getElementById(id).value = '');
+  renderPortfolio(); renderAdminListSections();
+}
+function removeCertification(i) {
+  portfolioData.certifications.splice(i, 1);
+  savePortfolio(); renderPortfolio(); renderAdminListSections();
+}
+
+function addThesis() {
+  const title = document.getElementById('th-title').value.trim();
+  const degree = document.getElementById('th-degree').value.trim();
+  const year = document.getElementById('th-year').value.trim();
+  const summary = document.getElementById('th-summary').value.trim();
+  if (!title) { alert("Please add a title."); return; }
+  portfolioData.thesis = portfolioData.thesis || [];
+  portfolioData.thesis.push({ title, degree, year, summary });
+  savePortfolio();
+  ['th-title', 'th-degree', 'th-year', 'th-summary'].forEach(id => document.getElementById(id).value = '');
+  renderPortfolio(); renderAdminListSections();
+}
+function removeThesis(i) {
+  portfolioData.thesis.splice(i, 1);
+  savePortfolio(); renderPortfolio(); renderAdminListSections();
+}
+
+function renderAdminListSections() {
+  document.getElementById('admin-ach-list').innerHTML = (portfolioData.achievements || []).map((a, i) => `
+    <div class="flex justify-between items-center px-3.5 py-2 rounded-xl bg-gray-100 dark:bg-gray-800 text-sm">
+      <span class="truncate">${escapeHtml(a)}</span>
+      <button onclick="removeAchievement(${i})" class="text-red-500 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
+    </div>`).join('');
+
+  document.getElementById('admin-pub-list').innerHTML = (portfolioData.publications || []).map((p, i) => `
+    <div class="flex justify-between items-center px-3.5 py-2 rounded-xl bg-gray-100 dark:bg-gray-800 text-sm">
+      <span class="truncate">${escapeHtml(p.title)} ${p.year ? '(' + escapeHtml(String(p.year)) + ')' : ''}</span>
+      <button onclick="removePublication(${i})" class="text-red-500 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
+    </div>`).join('');
+
+  document.getElementById('admin-cert-list').innerHTML = (portfolioData.certifications || []).map((c, i) => `
+    <div class="flex justify-between items-center px-3.5 py-2 rounded-xl bg-gray-100 dark:bg-gray-800 text-sm">
+      <span class="truncate">${escapeHtml(c.name)}</span>
+      <button onclick="removeCertification(${i})" class="text-red-500 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
+    </div>`).join('');
+
+  document.getElementById('admin-th-list').innerHTML = (portfolioData.thesis || []).map((t, i) => `
+    <div class="flex justify-between items-center px-3.5 py-2 rounded-xl bg-gray-100 dark:bg-gray-800 text-sm">
+      <span class="truncate">${escapeHtml(t.title)}</span>
+      <button onclick="removeThesis(${i})" class="text-red-500 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
+    </div>`).join('');
+}
+
+function setAdminTab(tab) {
+  document.getElementById('admin-notes').classList.toggle('hidden', tab !== 'notes');
+  document.getElementById('admin-portfolio').classList.toggle('hidden', tab !== 'portfolio');
+  document.getElementById('admin-tab-notes').classList.toggle('border-brand-600', tab === 'notes');
+  document.getElementById('admin-tab-notes').classList.toggle('text-brand-600', tab === 'notes');
+  document.getElementById('admin-tab-notes').classList.toggle('border-transparent', tab !== 'notes');
+  document.getElementById('admin-tab-portfolio').classList.toggle('border-brand-600', tab === 'portfolio');
+  document.getElementById('admin-tab-portfolio').classList.toggle('text-brand-600', tab === 'portfolio');
+  document.getElementById('admin-tab-portfolio').classList.toggle('border-transparent', tab !== 'portfolio');
+}
+
+// ==================== ADMIN MODAL ====================
+function showAdminModal() {
+  document.getElementById('admin-modal').classList.remove('hidden');
+  document.getElementById('admin-password').focus();
+  setAdminTab('notes');
+}
+function hideAdminModal() {
+  document.getElementById('admin-modal').classList.add('hidden');
+  document.getElementById('admin-password').value = '';
+  document.getElementById('admin-error').classList.add('hidden');
+  document.getElementById('admin-login').classList.remove('hidden');
+  document.getElementById('admin-panel').classList.add('hidden');
+}
+document.getElementById('admin-password').addEventListener('keypress', function (e) {
+  if (e.key === "Enter") {
+    if (this.value === ADMIN_PASSWORD) {
+      document.getElementById('admin-login').classList.add('hidden');
+      document.getElementById('admin-panel').classList.remove('hidden');
+      document.getElementById('admin-error').classList.add('hidden');
+      fillAdminForms();
+    } else {
+      document.getElementById('admin-error').classList.remove('hidden');
     }
+  }
+});
+document.getElementById('admin-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'admin-modal') hideAdminModal();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') hideAdminModal();
+});
 
-    function renderChapters() {
-      const container = document.getElementById('chapters-grid');
-      container.innerHTML = '';
+// ==================== UTIL ====================
+function escapeHtml(str) {
+  return String(str ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function escapeAttr(str) { return escapeHtml(str); }
+function escapeJs(str) { return String(str ?? '').replace(/\\/g, '\\\\').replace(/'/g, "\\'"); }
 
-      const chapters = notesData[currentSubject];
+let toastTimer;
+function toast(msg) {
+  let el = document.getElementById('toast');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'toast';
+    el.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-sm px-5 py-3 rounded-xl shadow-lg z-50 transition-opacity';
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.style.opacity = '1';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.style.opacity = '0'; }, 2000);
+}
 
-      chapters.forEach(ch => {
-        const card = document.createElement('div');
-        card.className = "bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-3xl p-6 card-hover";
-        card.innerHTML = `
-          <div class="flex justify-between">
-            <h3 class="font-semibold text-lg">${ch.chapter}</h3>
-            <span class="text-xs bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">${ch.date}</span>
-          </div>
-          <p class="mt-4 text-gray-600 dark:text-gray-400 text-sm line-clamp-3">${ch.desc}</p>
-          
-          <div class="mt-6 flex gap-3">
-            <a href="${ch.link}" target="_blank" 
-               class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-center py-3.5 rounded-2xl font-medium transition">
-              View Notes
-            </a>
-            <button onclick="copyLink('${ch.link}')" 
-                    class="px-6 border border-gray-300 dark:border-gray-600 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-800">
-              <i class="fas fa-copy"></i>
-            </button>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
+function renderAll() {
+  renderHeroStats();
+  renderSubjects();
+  renderChapters();
+  renderPortfolio();
+}
 
-    function copyLink(link) {
-      navigator.clipboard.writeText(link).then(() => {
-        alert("✅ Link copied to clipboard!");
-      });
-    }
-
-    // Search Functionality
-    document.getElementById('search').addEventListener('input', (e) => {
-      const term = e.target.value.toLowerCase();
-      const cards = document.querySelectorAll('#chapters-grid > div');
-      
-      cards.forEach(card => {
-        const text = card.textContent.toLowerCase();
-        card.style.display = text.includes(term) ? 'block' : 'none';
-      });
-    });
-
-    // Admin Modal
-    function showAdminModal() {
-      document.getElementById('admin-modal').classList.remove('hidden');
-      document.getElementById('admin-password').focus();
-    }
-
-    function hideAdminModal() {
-      document.getElementById('admin-modal').classList.add('hidden');
-      document.getElementById('admin-password').value = '';
-    }
-
-    // Admin Password Check (Change this password)
-    document.getElementById('admin-password').addEventListener('keypress', function(e) {
-      if (e.key === "Enter") {
-        if (this.value === "admin123") {
-          document.getElementById('admin-panel').classList.remove('hidden');
-        } else {
-          alert("Incorrect Password!");
-        }
-      }
-    });
-
-    // Initialize
-    window.onload = () => {
-      renderSubjects();
-      renderChapters();
-    };
-  </script>
+// ==================== INIT ====================
+window.onload = () => {
+  loadState();
+  syncThemeIcon();
+  document.getElementById('year').textContent = new Date().getFullYear();
+  renderAll();
+  const startPage = window.location.hash === '#portfolio' ? 'portfolio' : 'notes';
+  navigateTo(startPage);
+};
+</script>
 </body>
 </html>
